@@ -1,0 +1,76 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <h1>Форма зворотнього зв'язку</h1>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('name')?.touched && form.get('name')?.invalid }"
+    >
+        <label for="name">ПІБ:</label>
+        <input id="name" type="text" formControlName='name'>
+        <div 
+            *ngIf="form.get('name')?.touched && form.get('name')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('name').errors['required']">
+                ПІБ є обов'язковим. Будь ласка, вкажіть заголовок
+            </small>
+        </div>
+    </div>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('email')?.touched && form.get('email')?.invalid }"
+    >
+        <label for="email">Адреса електронної пошти:</label>
+        <input id="email" type="text" formControlName='email'>
+        <div 
+            *ngIf="form.get('email')?.touched && form.get('email')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('email').errors['required']">
+                Емейл є обов'язковим. Будь ласка, вкажіть заголовок
+            </small>
+            <small *ngIf="form.get('email').errors['email']">
+                Неправильний формат
+            </small>
+        </div>
+    </div>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('phoneNumber')?.touched && form.get('phoneNumber')?.invalid }"
+    >
+        <label for="phoneNumber">Контактний телефон:</label>
+        <input id="phoneNumber" type="text" formControlName='phoneNumber'>
+        <div 
+            *ngIf="form.get('phoneNumber')?.touched && form.get('phoneNumber')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('phoneNumber').errors['required']">
+                Номер телефону є обов'язковим. Будь ласка, вкажіть заголовок
+            </small>
+        </div>
+    </div>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('text')?.touched && form.get('text')?.invalid }"
+    >
+        <label for="text">Текст повідомлення:</label>
+        <textarea id="text" name="text" formControlName='text'></textarea>
+        <div 
+            *ngIf="form.get('text')?.touched && form.get('text')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('text').errors['required']">
+                Текст повідомлення є обов'язковим. Будь ласка, вкажіть заголовок
+            </small>
+        </div>
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-block btn-dark"
+        [disabled]="form.invalid"
+    >Надіслати</button>
+</form>
