@@ -1,0 +1,54 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <h1>Створення нового поста</h1>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('title')?.touched && form.get('title')?.invalid }"
+    >
+        <label for="title">Заголовок допису:</label>
+        <input id="title" type="text" formControlName='title'>
+        <div 
+            *ngIf="form.get('title')?.touched && form.get('title')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('title').errors['required']">
+                Заголовок є обов'язковим. Будь ласка, вкажіть заголовок
+            </small>
+        </div>
+    </div>
+
+    <div class="form-control">
+        <label for="status">Статус допису:</label>
+        <mat-form-field>
+            <mat-select formControlName='status'
+            (selectionChange)="onSelectionChanged($event)">
+                <mat-option *ngFor="let status of statuses" [value]="status.id">
+                    {{status.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="form-control">
+        <label for="date">Дата допису:</label>
+        <mat-form-field>
+            <input matInput [readonly]="!editable" [matDatepicker]="picker" [min]="todayDate" formControlName='date'>
+            <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="editable"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="form-control">
+        <label>Тіло допису:</label>
+        <quill-editor
+        ngDefaultControl
+        [modules]="this.modules"
+        formControlName="body"></quill-editor>
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-block btn-dark"
+        [disabled]="form.invalid"
+    >Створити допис</button>
+</form>

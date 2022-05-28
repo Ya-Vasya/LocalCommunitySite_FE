@@ -1,0 +1,32 @@
+.flex {
+    display: flex;
+  }
+  
+  .gap-4 {
+    gap: 1rem /* 16px */;
+  }
+  
+  .justify-start {
+    justify-content: flex-start;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .inline {
+    display: inline;
+  }
+  
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+select,
+textarea {
+  display: unset;
+  width: unset;
+  padding: unset;
+  font-size: unset;
+  border: unset;
+}

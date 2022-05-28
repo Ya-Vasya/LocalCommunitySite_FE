@@ -1,0 +1,53 @@
+<form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>Війти в панель адміністратора</h2>
+
+    <div class="alert alert-danger" *ngIf="(auth.error$ | async) as error">
+        {{error}}
+    </div>
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('email')?.touched && form.get('email')?.invalid }"
+    >
+        <label for="email">Електронна адреса:</label>
+        <input id="email" type="email" formControlName='email'>
+        <div 
+            *ngIf="form.get('email')?.touched && form.get('email')?.invalid"   
+            class="validation"
+        >
+            <small *ngIf="form.get('email').errors['required']">
+                Поле email обов'язкове до заповнення
+            </small>
+
+            <small *ngIf="form.get('email').errors['email']">
+                Поле email має бути відповідного формату
+            </small>
+        </div>
+    </div>
+
+    <div
+        class="form-control"
+        [ngClass]="{ invalid: form.get('password')?.touched && form.get('password')?.invalid }"
+    >
+        <label for="password">Пароль:</label>
+        <input id="password" type="password" formControlName='password'>
+        <div
+            class="validation"
+            *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
+        >        
+            <small *ngIf="form.get('password').errors['required']">
+                Поле 'Пароль' обов'язкове до заповнення
+            </small>
+
+            <small *ngIf="form.get('password').errors['minlength']">
+                Поле 'Пароль' повинно містити мінімум
+                {{form.get('password').errors['minlength'].requiredLength}}
+                символів
+            </small>
+        </div>
+    </div>
+
+    <button 
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="form.invalid">Увійти</button>
+</form>
