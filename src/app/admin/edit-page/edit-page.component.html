@@ -1,60 +1,91 @@
-<div *ngIf="form; else loading">
-    <form [formGroup]="form" (ngSubmit)="submit()">
-        <h1>Створення нового поста</h1>
-    
-        <div
-            class="form-control"
-            [ngClass]="{ invalid: form.get('title')?.touched && form.get('title')?.invalid }"
-        >
-            <label for="title">Заголовок допису:</label>
-            <input id="title" type="text" formControlName='title'>
-            <div 
-                *ngIf="form.get('title')?.touched && form.get('title')?.invalid"   
-                class="validation"
-            >
-                <small *ngIf="form.get('title').errors['required']">
-                    Заголовок є обов'язковим. Будь ласка, вкажіть заголовок
-                </small>
-            </div>
+<form [formGroup]="form" (ngSubmit)="submit()" *ngIf="post; else loading">
+    <h1 class="mt-3">Редагування допису</h1>
+    <div class="mt-3">
+        <label class="form-label">Заголовок допису</label>
+        <input type="text" class="form-control" placeholder="Заголовок допису" formControlName='title'>
+        <div class="alert-error" *ngIf="title.errors && (title.dirty || title.touched)">
+            <p *ngIf="title.errors?.['required']">Заголовок допису є обов'язковим. Будь ласка, вкажіть заголовок!</p>
         </div>
-    
-        <div class="form-control">
-            <label for="status">Статус допису:</label>
-            <mat-form-field>
-                <mat-select formControlName='status'
-                (selectionChange)="onSelectionChanged($event)">
-                    <mat-option *ngFor="let status of dataService.SHARED_STATUSES" [value]="status.id">
-                        {{status.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+    </div>
+
+    <div class="mt-3">
+        <label class="form-label">Статус допису</label>
+        <div class="input-group">
+            <select class="form-select" aria-label="Example select with button addon" formControlName='status'
+                [(ngModel)]='selectedStatusId'>
+                <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option>
+            </select>
         </div>
-    
-        <div class="form-control">
-            <label for="date">Дата допису:</label>
-            <mat-form-field>
-                <input matInput [readonly]="!editable" [matDatepicker]="picker" formControlName='date'>
-                <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="editable"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+        <div class="alert-error" *ngIf="status.errors && (status.dirty || status.touched)">
+            <p *ngIf="status.errors?.['required']">Статус допису є обов'язковим. Будь ласка, виберіть статус!</p>
         </div>
-    
-        <div class="form-control">
-            <label>Тіло допису:</label>
-            <quill-editor
-            ngDefaultControl
-            [modules]="this.modules"
-            formControlName="body"></quill-editor>
+    </div>
+
+    <div class="mt-3">
+        <label class="form-label">Дата допису</label>
+        <mat-form-field class="form-control">
+            <input matInput [readonly]="!editable" [matDatepicker]="picker" [min]="todayDate" formControlName='date'>
+            <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="editable"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="alert-error" *ngIf="date.errors && (date.dirty || date.touched)">
+            <p *ngIf="date.errors?.['required']">Дата допису є обов'язковою. Будь ласка, виберіть дату!</p>
         </div>
-    
-        <button
-            type="submit"
-            class="btn btn-block btn-dark"
-            [disabled]="form.invalid || submitted"
-        >Редагувати</button>
-    </form>
-</div>
+    </div>
+
+    <div class="mt-3">
+        <label class="form-label">Тіло допису</label>
+        <quill-editor ngDefaultControl [modules]="modules" formControlName="body"></quill-editor>
+        <div class="alert-error" *ngIf="body.errors && (body.dirty || body.touched)">
+            <p *ngIf="body.errors?.['required']">Тіло допису є обов'язковим. Будь ласка, вкажіть тіло!</p>
+        </div>
+    </div>
+
+    <div class="mt-3" *ngIf="!imageExists">
+        <label class="form-label">Виберіть фото для допису</label>
+        <input type="file" class="form-control" accept="image/*" formControlName="image"
+            (change)="onFileSelected($event)">
+        <div class="alert-error" *ngIf="image.errors && (image.dirty || image.touched)">
+            <p *ngIf="image.errors?.['required']">Фото допису є обов'язковим. Будь ласка, виберіть Фото!</p>
+        </div>
+    </div>
+
+    <div class="mt-3 card text-end position-relative" *ngIf="imageExists">
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"
+            data-bs-toggle="modal" data-bs-target="#deleteImageModal"></button>
+        <img [src]="post.image" class="">
+    </div>
+
+    <button type="submit" class="btn btn-block btn-dark mt-3" [disabled]="form.invalid || !hasChange">Редагувати</button>
+</form>
 
 <ng-template #loading>
-    <p class="text-center">Завантаження</p>
+    <div class="text-center m-3">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Завантаження ...</span>
+        </div>
+    </div>
 </ng-template>
+
+<!-- Reassurance modal -->
+<div class="modal fade" id="deleteImageModal" tabindex="-1" aria-labelledby="deleteImageModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-4" id="deleteImageModalLabel">Видалити фото?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fs-5">
+                Ви дійсно хочете видалити дане фото?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="onImageDelete()">Видалити</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <pre>{{post | json}}</pre>
+<pre>{{form.value | json}}</pre> -->

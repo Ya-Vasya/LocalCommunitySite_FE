@@ -1,23 +1,30 @@
 <div *ngIf="post$ | async as post; else loading">
-    <div class="post">
-        <div class="header">
-            <h1>{{ post.title }}</h1>
-
-            <button
-            routerLink="/" 
-            class="btn btn-link">На головну</button>
-        </div>
-
-        <div class="info">
-            <small>{{ post.createdAt }}</small>
-        </div>
-
-        <div class="post-body">
+    <div class="card mb-3">
+        <img [src]="post.image" class="card-img-top" alt="...">
+        <div class="card-body ">
+            <p class="card-title fs-3">{{ post.title }}</p>
             <quill-view-html [content]="post.body"></quill-view-html>
+            <p class="card-text"><small class="text-muted">{{ post.createdAt | date: "yyyy-MM-dd" }}</small></p>
         </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="createComment()">
+        <div class="">
+            <label class="form-label">Залиште свій коментар</label>
+            <textarea class="form-control" aria-label="With textarea" formControlName="text"></textarea>
+            <button type="submit" class="btn btn-primary mt-3" [disabled]="!form.dirty">Залишити коментар</button>
+        </div>
+    </form>
+
+    <div class="card mt-3" *ngIf="comments">
+        <app-comment-tree [postId]="postId" [comments]="comments"></app-comment-tree>
     </div>
 </div>
 
 <ng-template #loading>
-    <p class="text-center">Завантаження...</p>
+    <div class="text-center m-3">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Завантаження ...</span>
+        </div>
+    </div>
 </ng-template>

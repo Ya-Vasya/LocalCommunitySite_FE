@@ -1,54 +1,56 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-    <h1>Створення нового поста</h1>
-
-    <div
-        class="form-control"
-        [ngClass]="{ invalid: form.get('title')?.touched && form.get('title')?.invalid }"
-    >
-        <label for="title">Заголовок допису:</label>
-        <input id="title" type="text" formControlName='title'>
-        <div 
-            *ngIf="form.get('title')?.touched && form.get('title')?.invalid"   
-            class="validation"
-        >
-            <small *ngIf="form.get('title').errors['required']">
-                Заголовок є обов'язковим. Будь ласка, вкажіть заголовок
-            </small>
+    <h1 class="mt-3">Створення нового допису</h1>
+    <div class="mt-3">
+        <label class="form-label">Заголовок допису</label>
+        <input type="text" class="form-control" placeholder="Заголовок допису" formControlName='title'>
+        <div class="alert-error" *ngIf="title.errors && (title.dirty || title.touched)">
+            <p *ngIf="title.errors?.['required']">Заголовок допису є обов'язковим. Будь ласка, вкажіть заголовок!</p>
         </div>
     </div>
 
-    <div class="form-control">
-        <label for="status">Статус допису:</label>
-        <mat-form-field>
-            <mat-select formControlName='status'
-            (selectionChange)="onSelectionChanged($event)">
-                <mat-option *ngFor="let status of statuses" [value]="status.id">
-                    {{status.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+    <div class="mt-3">
+        <label class="form-label">Статус допису</label>
+        <div class="input-group">
+            <select class="form-select" aria-label="Example select with button addon" formControlName='status'>
+                <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option>
+            </select>
+        </div>
+        <div class="alert-error" *ngIf="status.errors && (status.dirty || status.touched)">
+            <p *ngIf="status.errors?.['required']">Статус допису є обов'язковим. Будь ласка, виберіть статус!</p>
+        </div>
     </div>
 
-    <div class="form-control">
-        <label for="date">Дата допису:</label>
-        <mat-form-field>
+    <div class="mt-3">
+        <label class="form-label">Дата допису</label>
+        <mat-form-field class="form-control">
             <input matInput [readonly]="!editable" [matDatepicker]="picker" [min]="todayDate" formControlName='date'>
             <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="editable"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <div class="alert-error" *ngIf="date.errors && (date.dirty || date.touched)">
+            <p *ngIf="date.errors?.['required']">Дата допису є обов'язковою. Будь ласка, виберіть дату!</p>
+        </div>
     </div>
 
-    <div class="form-control">
-        <label>Тіло допису:</label>
-        <quill-editor
-        ngDefaultControl
-        [modules]="this.modules"
-        formControlName="body"></quill-editor>
+    <div class="mt-3">
+        <label class="form-label">Тіло допису</label>
+        <quill-editor ngDefaultControl [modules]="this.modules" formControlName="body"></quill-editor>
+        <div class="alert-error" *ngIf="body.errors && (body.dirty || body.touched)">
+            <p *ngIf="body.errors?.['required']">Тіло допису є обов'язковим. Будь ласка, вкажіть тіло!</p>
+        </div>
     </div>
 
-    <button
-        type="submit"
-        class="btn btn-block btn-dark"
-        [disabled]="form.invalid"
-    >Створити допис</button>
+    <div class=" mt-3">
+        <label class="form-label">Виберіть фото для допису</label>
+        <input type="file" class="form-control" accept="image/*" formControlName="image"
+            (change)="onFileSelected($event)">
+        <div class="alert-error" *ngIf="image.errors && (image.dirty || image.touched)">
+            <p *ngIf="image.errors?.['required']">Фото допису є обов'язковим. Будь ласка, виберіть Фото!</p>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-block btn-dark mt-3" [disabled]="form.invalid">Створити допис</button>
 </form>
+
+<!-- <pre>{{form.value | json}}</pre>
+<pre>{{imageBase | json}}</pre> -->

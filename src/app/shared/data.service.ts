@@ -10,12 +10,24 @@ export class DataService {
         {id: 2, name: "Активний"}
     ] 
 
+    public Dictionary: {engName: string, name: string}[] = [
+        {engName: "Draft", name: "Чернетка"},
+        {engName: "Planned", name: "Заплановано"},
+        {engName: "Active", name: "Активний"}
+    ] 
+
     constructor()
     {
     }
 
-    getPostStatusName(id: Number)
+    getPostStatusName(engName: string)
     {
-        return this.SHARED_STATUSES.find(x => x.id == id).name
+        return this.Dictionary.find(x => x.engName === engName).name;
+    }
+
+    getPostStatusId(engName: string)
+    {
+        let ukrName = this.Dictionary.find(x => x.engName === engName).name;
+        return this.SHARED_STATUSES.find(x => x.name == ukrName).id;
     }
 }

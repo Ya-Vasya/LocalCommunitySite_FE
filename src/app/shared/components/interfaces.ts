@@ -8,12 +8,32 @@ export interface UserLoginRequestDto {
     token: string
 }
 
+export interface CommentRequest {
+  text: string,
+  postId: number,
+  parrentCommentId?: number
+}
+
+export interface CommentDto {
+    id?: number,
+    text: string,
+    isEdited: string,
+    isDeleted: string,
+    showReply: boolean,
+    createdAt: string,
+    postId: number,
+    parrentCommentId?: number,
+    userId: number,
+    replies: CommentDto[]
+}
+
 export interface Post {
     id?: number,
     title: string,
     body: string,
+    image: string,
     createdAt: string,
-    status: number
+    status: string
 }
 
 export interface PostStatus {

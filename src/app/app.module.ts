@@ -35,7 +35,6 @@ const INTERCEPTOR_PROVIDER: Provider = {
     FeedbackPageComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     NgbModule,
     SharedModule,
