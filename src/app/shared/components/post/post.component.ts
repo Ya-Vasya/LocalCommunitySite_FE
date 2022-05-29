@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Post } from '../interfaces';
 
 @Component({
@@ -10,9 +11,10 @@ export class PostComponent implements OnInit {
 
   @Input() post: Post
 
-  constructor() { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
+    // this.post.image = this.sanitizer.bypassSecurityTrustHtml(`url(${this.post.image})`).toString();
   }
 
 }

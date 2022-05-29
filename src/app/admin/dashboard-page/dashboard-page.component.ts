@@ -27,11 +27,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({});
   inProgress: boolean;
 
+  postToDeleteId: number;
+
   ngOnInit(): void {
     this.inProgress = true;
     this.pSub = this.postService.getAll().subscribe(posts => {
       this.posts = posts
       this.inProgress = false;
+      console.log(posts);
     })
     this.form = new FormGroup(
       {
@@ -49,11 +52,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  remove(id: Number) {
-    this.postService.remove(id)
+  remove() {
+    this.postService.remove(this.postToDeleteId)
     .subscribe(() => {
-      this.posts = this.posts.filter(post => post.id != id)
+      this.posts = this.posts.filter(post => post.id != this.postToDeleteId)
     })
+  }
+
+  onModalOpen(id: number){
+    this.postToDeleteId = id;
   }
 
   submit() {

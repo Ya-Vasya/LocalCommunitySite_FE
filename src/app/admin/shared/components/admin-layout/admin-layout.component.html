@@ -1,6 +1,6 @@
 <app-alert></app-alert>
 
-<nav class="navbar bg-primary">
+<!-- <nav class="navbar bg-primary">
     <h1>
         <a routerLink="/">Панель адміністратора</a>
     </h1>
@@ -15,7 +15,15 @@
             <a href="#" (click)="logout($event)">Вихід з системи</a>
         </li>
     </ul>
-</nav>
+</nav> -->
+
+<nav class="nav justify-content-end bg-primary">
+    <a class="nav-link link-dark" [routerLink]="['/']">Головна сторінка</a>
+    <a class="nav-link link-dark" [routerLink]="['/admin', 'dashboard']">Головна панель</a>
+    <a class="nav-link link-dark" [routerLink]="['/admin', 'create']">Створити пост</a>
+    <a class="nav-link link-dark" (click)="logout($event)">Вийти з системи</a>
+  </nav>
+
 <div class="container">
     <router-outlet></router-outlet>
 </div>

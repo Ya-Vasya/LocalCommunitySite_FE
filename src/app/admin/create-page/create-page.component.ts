@@ -32,7 +32,7 @@ export const MY_FORMATS = {
   templateUrl: './create-page.component.html',
   styleUrls: ['./create-page.component.scss'],
   providers: [
-    {provide: DatePipe}
+    { provide: DatePipe }
   ],
 })
 export class CreatePageComponent implements OnInit {
@@ -40,8 +40,17 @@ export class CreatePageComponent implements OnInit {
   @Input() editable: boolean = true;
 
   statuses: PostStatus[] = this.shared.SHARED_STATUSES;
-  todayDate:Date = new Date();
+  todayDate: Date = new Date();
   form: FormGroup = new FormGroup({});
+  title: FormControl;
+  body: FormControl;
+  status: FormControl;
+  date: FormControl;
+  time: FormControl;
+  image: FormControl;
+
+  imageBase: any;
+
   modules = {}
 
   constructor(
@@ -50,18 +59,33 @@ export class CreatePageComponent implements OnInit {
     private datepipe: DatePipe,
     private router: Router,
     private alertService: AlertService) {
-      this.initQuillModules()
-     }
+  }
 
   ngOnInit(): void {
-    this.form = new FormGroup(
-      {
-        title: new FormControl(null, Validators.required),
-        body: new FormControl(null, Validators.required),
-        status: new FormControl(0, Validators.required),
-        date: new FormControl(moment(), Validators.required),
-        time: new FormControl(null)
-      })
+    this.createFormControls();
+    this.createForm();
+
+    this.initQuillModules();
+  }
+
+  createFormControls() {
+    this.title = new FormControl(null, Validators.required);
+    this.body = new FormControl(null, Validators.required);
+    this.status = new FormControl(null, Validators.required);
+    this.date = new FormControl(moment(), Validators.required);
+    this.time = new FormControl(null);
+    this.image = new FormControl(null, Validators.required);
+  }
+
+  createForm() {
+    this.form = new FormGroup({
+      title: this.title,
+      body: this.body,
+      status: this.status,
+      date: this.date,
+      time: this.time,
+      image: this.image
+    });
   }
 
   submit() {
@@ -70,32 +94,46 @@ export class CreatePageComponent implements OnInit {
     }
 
     const post: Post = {
-      title: this.form.value.title,
-      body: this.form.value.body,
+      title: this.title.value,
+      body: this.body.value,
+      image: this.imageBase,
       createdAt: this.datepipe.transform(this.form.value.date, 'yyyy-MM-dd'),
-      status: this.form.value.status
+      status: this.status.value
     }
     console.log(post)
-    this.postsService.create(post).subscribe(() =>
-    {
+    this.postsService.create(post).subscribe(() => {
       this.alertService.success('Пост успішно створено')
       this.form.reset()
       //this.router.navigate(['/admin', 'dashboard'])
     })
   }
 
-  onSelectionChanged({value}: any) {
+  onSelectionChanged({ value }: any) {
     console.log(value);
-    if(value === 2) {
-      this.form.get('date').setValue(moment())
+    if (value === 2) {
+      this.date.setValue(moment())
       this.editable = false
     } else {
       this.editable = true
     }
   }
 
-  private initQuillModules()
-  {
+  onFileSelected(event: any) {
+    var self = this;
+
+    let file = event.target.files[0];
+    let fileReader = new FileReader();
+
+
+    fileReader.onload = function (ev) {
+      debugger;
+      self.imageBase = this.result?.toString();
+    }
+
+    fileReader.readAsDataURL(file);
+  }
+
+  private initQuillModules() {
     this.modules = {
       blotFormatter: {
         // empty object for default behaviour.
