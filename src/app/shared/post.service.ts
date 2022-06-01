@@ -1,8 +1,8 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, tap } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Post, PostFilterRequest } from "./components/interfaces";
+import { Pagination, Post, PostFilterRequest, PostQuery } from "./components/interfaces";
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -14,7 +14,8 @@ export class PostsService {
 
     private readonly API_ROUTES = {
         default: `/post`,
-        filters: `/post/filter`
+        filters: `/post/filter`,
+        query: `/post/query`
       }
 
     create(post: Post): Observable<Post> {
@@ -25,6 +26,20 @@ export class PostsService {
     getAll(): Observable<Array<Post>> {
         const url: string = `${this.baseUrl}${this.API_ROUTES.default}`
         return this.http.get<Array<Post>>(url);
+    }
+
+    getQuery(postQuery: PostQuery) : Observable<Pagination<Post>>{
+        const url: string = `${this.baseUrl}${this.API_ROUTES.query}`;
+
+        let queryParams = new HttpParams();
+        queryParams = queryParams.append("offset", postQuery.offset);
+        queryParams = queryParams.append("limit", postQuery.limit);
+        queryParams = queryParams.append("section", postQuery.section ?? '');
+        queryParams = queryParams.append("status", postQuery.status ?? '');
+        queryParams = queryParams.append("startDate", postQuery.startDate ?? '');
+        queryParams = queryParams.append("endDate", postQuery.endDate ?? '');
+
+        return this.http.get<Pagination<Post>>(url, {params: queryParams});
     }
 
     remove(postId: Number) {

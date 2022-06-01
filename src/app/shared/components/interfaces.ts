@@ -27,6 +27,11 @@ export interface CommentDto {
     replies: CommentDto[]
 }
 
+export interface Pagination<T> {
+    totalLenght: number,
+    list: Array<T>
+}
+
 export interface Post {
     id?: number,
     title: string,
@@ -39,6 +44,15 @@ export interface Post {
 export interface PostStatus {
     id: number,
     name: string
+}
+
+export interface PostQuery{
+    offset: number,
+    limit: number,
+    status: number,
+    section?: number
+    startDate?: string,
+    endDate?: string
 }
 
 export interface TokenRequest {

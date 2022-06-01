@@ -4,6 +4,12 @@ import { PostStatus } from "./components/interfaces";
 @Injectable( {providedIn: 'root'} )
 export class DataService {
 
+    public ConstStatuses = [
+        {Draft: 2},
+        {Planned: 2},
+        {Active: 2}
+    ] 
+
     public SHARED_STATUSES: PostStatus[] = [
         {id: 0, name: "Чернетка"},
         {id: 1, name: "Заплановано"},
@@ -15,6 +21,11 @@ export class DataService {
         {engName: "Planned", name: "Заплановано"},
         {engName: "Active", name: "Активний"}
     ] 
+
+    public routeSection: {route: string, sectionId: number}[] = [
+        {route: "/news", sectionId: 0 },
+        {route: "/announcements", sectionId: 1 },
+    ]
 
     constructor()
     {
@@ -29,5 +40,9 @@ export class DataService {
     {
         let ukrName = this.Dictionary.find(x => x.engName === engName).name;
         return this.SHARED_STATUSES.find(x => x.name == ukrName).id;
+    }
+
+    getSectionId(route: string){
+        return this.routeSection.find(x => x.route == route).sectionId;
     }
 }
