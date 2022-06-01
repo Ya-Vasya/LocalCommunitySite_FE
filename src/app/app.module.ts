@@ -1,5 +1,4 @@
 import { NgModule, Provider } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,11 +14,13 @@ import { DataService } from './shared/data.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/auth.interceptor';
 import { AuthenticationService } from './admin/shared/services/authentication.service';
-import { registerLocaleData } from '@angular/common';
 import { FeedbackPageComponent } from './feedback-page/feedback-page.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommentTreeComponent } from './comment-tree/comment-tree.component';
+import { HttpErrorInterceptor } from './shared/error.interceptor';
 
-const INTERCEPTOR_PROVIDER: Provider = {
+const AUTH_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
   multi: true,
   useClass: AuthInterceptor
@@ -32,10 +33,12 @@ const INTERCEPTOR_PROVIDER: Provider = {
     HomePageComponent,
     PostPageComponent,
     PostComponent,
-    FeedbackPageComponent
+    FeedbackPageComponent,
+    CommentTreeComponent
   ],
   imports: [
     AppRoutingModule,
+    BrowserModule,
     NgbModule,
     SharedModule,
     BrowserAnimationsModule,
@@ -43,7 +46,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [DataService, INTERCEPTOR_PROVIDER, AuthenticationService],
+  providers: [DataService, AUTH_INTERCEPTOR_PROVIDER, AuthenticationService],
   bootstrap: [AppComponent],
   exports: [MaterialModule]
 })

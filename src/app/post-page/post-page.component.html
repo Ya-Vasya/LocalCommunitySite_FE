@@ -1,6 +1,8 @@
 <div *ngIf="post$ | async as post; else loading">
-    <div class="card mb-3">
-        <img [src]="post.image" class="card-img-top" alt="...">
+    <div class="card mb-3 mt-3">
+        <div class="offset-md-2 col-md-8 text-center">
+            <img [src]="post.image" class="card-img-top" alt="...">
+        </div>
         <div class="card-body ">
             <p class="card-title fs-3">{{ post.title }}</p>
             <quill-view-html [content]="post.body"></quill-view-html>
@@ -20,6 +22,12 @@
         <app-comment-tree [postId]="postId" [comments]="comments"></app-comment-tree>
     </div>
 </div>
+
+<mat-paginator [length]="100"
+              [pageSize]="20"
+              [pageSizeOptions]="[5, 10, 20, 100]"
+              aria-label="Select page">
+</mat-paginator>
 
 <ng-template #loading>
     <div class="text-center m-3">

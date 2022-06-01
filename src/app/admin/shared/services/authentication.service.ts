@@ -40,6 +40,15 @@ export class AuthenticationService {
         )
     }
 
+    register(user: User) : Observable<UserLoginRequestDto> {
+        const url: string = `${this.baseUrl}${this.API_ROUTES.register}`
+        return this.httpClient.post<UserLoginRequestDto>(url, user)
+        .pipe(
+            tap(),
+            catchError(err => this.handleError(err))
+        )
+    }
+
     refresh(tokenRequest: TokenRequest)
     {
         const url: string = `${this.baseUrl}${this.API_ROUTES.refresh}`
@@ -47,11 +56,11 @@ export class AuthenticationService {
         let response: UserLoginRequestDto;
 
         return this.httpClient.post<UserLoginRequestDto>(url, tokenRequest)
+        .pipe(catchError(err => throwError(() => err)))
         .subscribe((data : UserLoginRequestDto) => { 
                 response = data,
                 this.setToken(response)
-            }),
-        catchError(err => throwError(() => err))
+            })
     }
 
     private handleError(error: HttpErrorResponse)

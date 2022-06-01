@@ -1,5 +1,5 @@
 <div *ngIf="posts.length; else loading">
-  <form class="flex gap-4 justify-start items-center" [formGroup]="form" (ngSubmit)="submit()">
+  <form class="flex gap-4 mt-2 justify-content-center items-center" style="flex-wrap: wrap;" [formGroup]="form" (ngSubmit)="submit()">
     <mat-form-field appearance="fill" class="inline">
       <mat-label>Заголовок</mat-label>
       <input matInput formControlName='title' />

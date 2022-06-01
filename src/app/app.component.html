@@ -1,1 +1,80 @@
-<router-outlet></router-outlet>
+<div class="container-fluid" id="logo-container">
+    <div class="hey d-flex justify-content-center align-items-center">
+      <img src="assets/img/Lesser_Coat_of_Arms_of_Ukraine.svg.webp">
+    </div>
+  </div>
+  <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" [routerLink]="''">Головна</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['', 'news']">Новини</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['', 'announcements']">Анонси</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['feedback']">Контакти</a>
+      </li>
+
+      <li *ngIf="authServise.isAuthenticated()"
+      class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Адмін</a>
+        <div class="dropdown-menu dropdown-menu-end">
+            <a class="dropdown-item" [routerLink]="['/admin', 'dashboard']">Панель новин</a>
+            <a class="dropdown-item" [routerLink]="['/admin', 'users']">Панель користувачів</a>
+            <a class="dropdown-item" [routerLink]="['/admin', 'feedbacks']">Панель відгуків</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" [routerLink]="['/admin', 'create-post']">Створити новину</a>
+            <a class="dropdown-item" [routerLink]="['/admin', 'create-user']">Створити користувача</a>
+            <div class="dropdown-divider"></div>
+            <a (click)="logout($event)" class="dropdown-item">Вийти з системи</a>
+        </div>
+    </li>
+    </ul>
+    
+  <div class="container" id="main-container">
+      <router-outlet></router-outlet>
+  </div>
+
+<footer class="bg-dark text-white footer mt-0">
+<!-- Grid container -->
+<div class="container text-center p-4 pb-0">
+    <!-- Section: Social media -->
+    <section class="mb-4">
+    <!-- Facebook -->
+    <a role="button" class="btn btn-outline-light m-1" href="https://gromada.org.ua/rss/77246/" rel="nofollow" target="_blank">
+        <i class="bi bi-rss" aria-hidden="true"></i></a>
+
+    <a role="button" class="btn btn-outline-light btn-floating m-1" href="https://ezupilska-gromada.gov.ua/feedback/#chat_bot" title="Наша громада в смартфоні">
+        <i class="bi bi-robot" aria-hidden="true"></i></a>
+
+    <i class="fab fa-twitter" aria-hidden="true"></i>
+    
+    <a role="button" class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/yezypiltg/" rel="nofollow"target="_blank">
+        <i class="bi bi-instagram" aria-hidden="true"></i></a>
+
+    <a role="button" class="btn btn-outline-light btn-floating m-1" href="https://cutt.ly/pnGELjb" rel="nofollow" target="_blank">
+        <i class="bi bi-facebook" aria-hidden="true"></i></a>
+
+    <a role="button" class="btn btn-outline-light btn-floating m-1" href="https://www.youtube.com/channel/UCbiowo-uknOqKv5qi3Uwl7g" rel="nofollow" target="_blank">
+        <i class="bi bi-youtube" aria-hidden="true"></i></a>
+    </section>
+    <!-- Section: Social media -->
+</div>
+
+<div *ngIf="!authServise.isAuthenticated()" class="login">
+    <a [routerLink]="['/admin', 'login']">
+        <i class="bi bi-shield-lock"></i>
+        Вхід для адміністратора</a>
+
+</div>
+<!-- Grid container -->
+
+<!-- Copyright -->
+<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    © 2021-2022 Copyright:
+    <a class="text-white" href="#">Єзупільська селищна рада</a>
+</div>
+<!-- Copyright -->
+</footer>

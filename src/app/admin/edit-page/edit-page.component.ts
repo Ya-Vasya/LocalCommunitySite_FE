@@ -96,7 +96,6 @@ export class EditPageComponent implements OnInit, OnDestroy {
   onCreateGroupFormValueChange() {
     const initialValue = this.form.value
     this.form.valueChanges.subscribe(value => {
-      debugger;
       this.hasChange = Object.keys(initialValue).some(key => this.form.value[key] != initialValue[key])
     });
   }
@@ -109,7 +108,6 @@ export class EditPageComponent implements OnInit, OnDestroy {
 
 
     fileReader.onload = function (ev) {
-      debugger;
       self.imageBase = this.result?.toString();
     }
 

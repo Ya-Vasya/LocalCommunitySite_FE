@@ -27,11 +27,12 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   pSub: Subscription
   form: FormGroup = new FormGroup({});
   inProgress: boolean;
+  userToDeleteId: string;
 
   ngOnInit(): void {
     this.inProgress = true;
-    this.pSub = this.authService.getAll().subscribe(posts => {
-      this.users = posts
+    this.pSub = this.authService.getAll().subscribe(users => {
+      this.users = users
       this.inProgress = false;
     })
     this.form = new FormGroup(
@@ -50,10 +51,10 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  remove(email: string) {
-    this.authService.remove(email)
+  remove() {
+    this.authService.remove(this.userToDeleteId)
     .subscribe(() => {
-      this.users = this.users.filter(u => u.email != email)
+      this.users = this.users.filter(user => user.email != this.userToDeleteId)
     })
   }
 
@@ -70,5 +71,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+  onModalOpen(email: string){
+    this.userToDeleteId = email;
+  }
 }

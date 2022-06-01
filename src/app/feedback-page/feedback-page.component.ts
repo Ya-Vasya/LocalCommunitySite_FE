@@ -38,7 +38,6 @@ export class FeedbackPageComponent implements OnInit {
     
     this.service.create(request).subscribe(() =>
     {
-      //this.alertService.success('Пост успішно створено')
       this.form.reset()
       //this.router.navigate(['/admin', 'dashboard'])
     })

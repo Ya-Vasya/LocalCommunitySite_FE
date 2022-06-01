@@ -44,10 +44,8 @@ export class PostPageComponent implements OnInit {
   }
 
   refreshComments() {
-    console.log(this.postId);
 
     this.commentService.getCommentsByPostId(this.postId).subscribe(res => {
-      console.log(res);
       this.comments = res;
     })
   }

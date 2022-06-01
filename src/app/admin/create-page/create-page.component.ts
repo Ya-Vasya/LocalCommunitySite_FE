@@ -11,7 +11,7 @@ import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill'
 import Quill from 'quill'
 import BlotFormatter from 'quill-blot-formatter';
 import { Router } from '@angular/router';
-import { AlertService } from '../shared/services/alert.service';
+import { NotifierService } from 'angular-notifier';
 
 Quill.register('modules/blotFormatter', BlotFormatter);
 
@@ -56,9 +56,7 @@ export class CreatePageComponent implements OnInit {
   constructor(
     private shared: DataService,
     private postsService: PostsService,
-    private datepipe: DatePipe,
-    private router: Router,
-    private alertService: AlertService) {
+    private datepipe: DatePipe) {
   }
 
   ngOnInit(): void {
@@ -92,7 +90,7 @@ export class CreatePageComponent implements OnInit {
     if (this.form.invalid) {
       return
     }
-
+    
     const post: Post = {
       title: this.title.value,
       body: this.body.value,
@@ -102,7 +100,6 @@ export class CreatePageComponent implements OnInit {
     }
     console.log(post)
     this.postsService.create(post).subscribe(() => {
-      this.alertService.success('Пост успішно створено')
       this.form.reset()
       //this.router.navigate(['/admin', 'dashboard'])
     })
@@ -126,7 +123,6 @@ export class CreatePageComponent implements OnInit {
 
 
     fileReader.onload = function (ev) {
-      debugger;
       self.imageBase = this.result?.toString();
     }
 

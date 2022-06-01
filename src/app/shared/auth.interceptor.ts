@@ -35,6 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     refreshToken: localStorage.getItem('refreshToken')
                 }
                 try {
+                    debugger;
                     this.auth.refresh(tokenRequest)
                 } catch (error) {
                     this.router.navigate(['/admin', 'login'])

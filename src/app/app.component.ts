@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from './admin/shared/services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +9,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   
-  constructor() {
+  constructor(
+    public authServise: AuthenticationService,
+    private router: Router) {
+  }
+
+  logout(event: Event){
+    event.preventDefault()
+    this.authServise.logout()
+    this.router.navigate(['/admin', 'login'])
   }
 }
