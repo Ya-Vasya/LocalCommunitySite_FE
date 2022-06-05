@@ -4,50 +4,52 @@
     <div class="alert alert-danger" *ngIf="(auth.error$ | async) as error">
         {{error}}
     </div>
-    <div
-        class="form-group"
-        [ngClass]="{ invalid: form.get('email')?.touched && form.get('email')?.invalid }"
-    >
-        <label for="email">Електронна адреса:</label>
-        <input class="form-control" id="email" type="email" formControlName='email'>
-        <div 
-            *ngIf="form.get('email')?.touched && form.get('email')?.invalid"   
-            class="validation"
-        >
-            <small *ngIf="form.get('email').errors['required']">
-                Поле email обов'язкове до заповнення
-            </small>
-
-            <small *ngIf="form.get('email').errors['email']">
-                Поле email має бути відповідного формату
-            </small>
+    <div class="form-group my-3">
+        <label class="control-label">Електронна адреса:</label>
+        <div class="input-group">
+            <input type="email" class="form-control" formControlName="email" />
+        </div>
+        <div class="alert-error mt-2" *ngIf="email.errors && (email.dirty || email.touched)">
+            <p *ngIf="email.errors?.['required']">Поле 'Електронна адреса' обов'язкове до заповнення</p>
+            <p *ngIf="email.errors?.['email']">Поле email має бути відповідного формату</p>
         </div>
     </div>
 
-    <div
-        class="form-group"
-        [ngClass]="{ invalid: form.get('password')?.touched && form.get('password')?.invalid }"
-    >
-        <label for="password">Пароль:</label>
-        <input class="form-control" id="password" type="password" formControlName='password'>
-        <div
-            class="validation"
-            *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
-        >        
-            <small *ngIf="form.get('password').errors['required']">
-                Поле 'Пароль' обов'язкове до заповнення
-            </small>
-
-            <small *ngIf="form.get('password').errors['minlength']">
-                Поле 'Пароль' повинно містити мінімум
-                {{form.get('password').errors['minlength'].requiredLength}}
-                символів
-            </small>
+    <div class="form-group my-3">
+        <label class="control-label">Пароль</label>
+        <div class="input-group">
+            <input [type]="passwordText ? 'text' : 'password'" class="form-control" formControlName="password" />
+            <span class="input-group-text" (click)="togglePasswordTextType()">
+                <i class="fa" [ngClass]="{
+              'bi bi-eye-slash-fill': !passwordText,
+              'bi bi-eye-fill': passwordText
+            }"></i>
+            </span>
+        </div>
+        <div class="alert-error mt-2" *ngIf="password.errors && (password.dirty || password.touched)">
+            <p *ngIf="password.errors?.['required']">Поле 'Пароль' обов'язкове до заповнення</p>
+            <p *ngIf="password.errors?.['pattern']">Пароль має містити великі та малі літери, цифри та спец. символи</p>
         </div>
     </div>
 
-    <button 
-        type="submit"
-        class="btn btn-primary mt-2"
-        [disabled]="form.invalid">Увійти</button>
+    <div class="form-group my-3">
+        <label class="control-label">Підтветдіть пароль</label>
+        <div class="input-group">
+            <input [type]="confirmPasswordText ? 'text' : 'password'" class="form-control"
+                formControlName="confirmPassword" />
+            <span class="input-group-text" (click)="toggleConfirmPasswordTextType()">
+                <i class="fa" [ngClass]="{
+              'bi bi-eye-slash-fill': !confirmPasswordText,
+              'bi bi-eye-fill': confirmPasswordText
+            }"></i>
+            </span>
+        </div>
+        <div class="alert-error mt-2"
+            *ngIf="confirmPassword.errors && (confirmPassword.dirty || confirmPassword.touched)">
+            <p *ngIf="confirmPassword.errors?.['required']">Поле 'Підтветдіть пароль' обов'язкове до заповнення</p>
+            <p *ngIf="confirmPassword.errors?.['passwordMissmatch']">Дане поле не збігаєтсья з полем 'Пароль'</p>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2" [disabled]="form.invalid">Зареєструвати</button>
 </form>

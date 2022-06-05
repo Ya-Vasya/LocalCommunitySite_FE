@@ -16,6 +16,7 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HttpErrorInterceptor } from "../shared/error.interceptor";
 import { UsersPageComponent } from "./users-page/users-page.component";
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { AuthInterceptor } from "../shared/auth.interceptor";
 
 const ERROR_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -64,6 +65,12 @@ const customNotifierOptions: NotifierOptions = {
     }
   };
 
+  const AUTH_INTERCEPTOR_PROVIDER: Provider = {
+    provide: HTTP_INTERCEPTORS,
+    multi: true,
+    useClass: AuthInterceptor
+  }
+
 @NgModule({
     imports: [
         MaterialModule,
@@ -95,6 +102,7 @@ const customNotifierOptions: NotifierOptions = {
     providers: [
         SharedModule,
         AuthGuard,
+        AUTH_INTERCEPTOR_PROVIDER,
         AuthenticationService
     ]
 })

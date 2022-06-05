@@ -5,7 +5,6 @@ import { DashboardPageComponent } from './admin/dashboard-page/dashboard-page.co
 import { FeedbackPageComponent } from './feedback-page/feedback-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PostPageComponent } from './post-page/post-page.component';
-import { MainLayoutComponent } from './shared/components/main-layout/main-layout.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },

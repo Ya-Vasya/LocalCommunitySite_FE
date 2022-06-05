@@ -22,9 +22,22 @@
     </div>
 
     <div class="mt-3">
+        <label class="form-label">Категорія допису</label>
+        <div class="input-group">
+            <select class="form-select" aria-label="Example select with button addon" formControlName='section'>
+                [(ngModel)]='selectedSectionId'>
+                <option *ngFor="let section of sections" [value]="section.id">{{section.name}}</option>
+            </select>
+        </div>
+        <div class="alert-error" *ngIf="section.errors && (section.dirty || section.touched)">
+            <p *ngIf="section.errors?.['required']">Категорія допису є обов'язковим. Будь ласка, виберіть категорію!</p>
+        </div>
+    </div>
+
+    <div class="mt-3">
         <label class="form-label">Дата допису</label>
         <mat-form-field class="form-control">
-            <input matInput [readonly]="!editable" [matDatepicker]="picker" [min]="todayDate" formControlName='date'>
+            <input matInput [readonly]="!editable" [matDatepicker]="picker" formControlName='date'>
             <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="editable"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -50,13 +63,13 @@
         </div>
     </div>
 
-    <div class="mt-3 card text-end position-relative" *ngIf="imageExists">
+    <div class="mt-3 card text-end position-relative col-md-4 offset-md-4" *ngIf="imageExists">
         <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"
             data-bs-toggle="modal" data-bs-target="#deleteImageModal"></button>
         <img [src]="post.image" class="">
     </div>
 
-    <button type="submit" class="btn btn-block btn-dark mt-3" [disabled]="form.invalid || !hasChange">Редагувати</button>
+    <button type="submit" class="btn btn-block btn-dark mt-3 mb-3" [disabled]="form.invalid || !hasChange">Редагувати</button>
 </form>
 
 <ng-template #loading>
@@ -87,5 +100,5 @@
     </div>
 </div>
 
-<!-- <pre>{{post | json}}</pre>
-<pre>{{form.value | json}}</pre> -->
+<!-- <pre>{{post | json}}</pre> -->
+<!-- <pre>{{form.value | json}}</pre> -->

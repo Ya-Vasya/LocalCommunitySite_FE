@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Post, PostStatus } from 'src/app/shared/components/interfaces';
+import { Post, PostStatus, Section } from 'src/app/shared/components/interfaces';
 import { DataService } from 'src/app/shared/data.service';
 import moment from 'moment';
 import { PostsService } from 'src/app/shared/post.service';
@@ -40,6 +40,8 @@ export class CreatePageComponent implements OnInit {
   @Input() editable: boolean = true;
 
   statuses: PostStatus[] = this.shared.SHARED_STATUSES;
+  sections: Section[] = this.shared.SHARED_SECTIONS;
+
   todayDate: Date = new Date();
   form: FormGroup = new FormGroup({});
   title: FormControl;
@@ -48,6 +50,7 @@ export class CreatePageComponent implements OnInit {
   date: FormControl;
   time: FormControl;
   image: FormControl;
+  section: FormControl;
 
   imageBase: any;
 
@@ -73,6 +76,7 @@ export class CreatePageComponent implements OnInit {
     this.date = new FormControl(moment(), Validators.required);
     this.time = new FormControl(null);
     this.image = new FormControl(null, Validators.required);
+    this.section = new FormControl(null, Validators.required);
   }
 
   createForm() {
@@ -82,7 +86,8 @@ export class CreatePageComponent implements OnInit {
       status: this.status,
       date: this.date,
       time: this.time,
-      image: this.image
+      image: this.image,
+      section: this.section
     });
   }
 
@@ -96,7 +101,8 @@ export class CreatePageComponent implements OnInit {
       body: this.body.value,
       image: this.imageBase,
       createdAt: this.datepipe.transform(this.form.value.date, 'yyyy-MM-dd'),
-      status: this.status.value
+      status: this.status.value,
+      section: this.section.value
     }
     console.log(post)
     this.postsService.create(post).subscribe(() => {
@@ -106,7 +112,6 @@ export class CreatePageComponent implements OnInit {
   }
 
   onSelectionChanged({ value }: any) {
-    console.log(value);
     if (value === 2) {
       this.date.setValue(moment())
       this.editable = false
@@ -120,7 +125,6 @@ export class CreatePageComponent implements OnInit {
 
     let file = event.target.files[0];
     let fileReader = new FileReader();
-
 
     fileReader.onload = function (ev) {
       self.imageBase = this.result?.toString();

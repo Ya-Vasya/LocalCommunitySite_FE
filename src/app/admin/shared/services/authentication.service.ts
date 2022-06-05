@@ -49,18 +49,24 @@ export class AuthenticationService {
         )
     }
 
-    refresh(tokenRequest: TokenRequest)
+    refresh()
     {
         const url: string = `${this.baseUrl}${this.API_ROUTES.refresh}`
 
         let response: UserLoginRequestDto;
 
+        let tokenRequest: TokenRequest = {
+            token: localStorage.getItem('jwtToken'),
+            refreshToken: localStorage.getItem('refreshToken')
+        }
+
         return this.httpClient.post<UserLoginRequestDto>(url, tokenRequest)
-        .pipe(catchError(err => throwError(() => err)))
-        .subscribe((data : UserLoginRequestDto) => { 
+        .pipe(
+            tap((data : UserLoginRequestDto) => { 
                 response = data,
                 this.setToken(response)
             })
+        );
     }
 
     private handleError(error: HttpErrorResponse)
@@ -116,7 +122,6 @@ export class AuthenticationService {
         if (response)
         {
             localStorage.setItem('jwtToken', response.token)
-            localStorage.setItem('refreshToken', response.refreshToken)
         } else {
             localStorage.clear()
         }

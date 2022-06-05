@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PostStatus } from "./components/interfaces";
+import { PostStatus, Section } from "./components/interfaces";
 
 @Injectable( {providedIn: 'root'} )
 export class DataService {
@@ -12,15 +12,23 @@ export class DataService {
 
     public SHARED_STATUSES: PostStatus[] = [
         {id: 0, name: "Чернетка"},
-        {id: 1, name: "Заплановано"},
         {id: 2, name: "Активний"}
     ] 
 
     public Dictionary: {engName: string, name: string}[] = [
         {engName: "Draft", name: "Чернетка"},
-        {engName: "Planned", name: "Заплановано"},
         {engName: "Active", name: "Активний"}
-    ] 
+    ]
+
+    public SHARED_SECTIONS: Section[] = [
+        {id: 0, name: "Новини"},
+        {id: 1, name: "Анонси"},
+    ]
+
+    public Section_Dictionary: {engName: string, name: string}[] = [
+        {engName: "news", name: "Новини"},
+        {engName: "announcements", name: "Анонси"}
+    ]
 
     public routeSection: {route: string, sectionId: number}[] = [
         {route: "/news", sectionId: 0 },
@@ -44,5 +52,16 @@ export class DataService {
 
     getSectionId(route: string){
         return this.routeSection.find(x => x.route == route).sectionId;
+    }
+
+    getPostSectionName(engName: string)
+    {
+        return this.Section_Dictionary.find(x => x.engName === engName).name;
+    }
+
+    getPostSectionId(engName: string)
+    {
+        let ukrName = this.Section_Dictionary.find(x => x.engName === engName).name;
+        return this.SHARED_SECTIONS.find(x => x.name == ukrName).id;
     }
 }

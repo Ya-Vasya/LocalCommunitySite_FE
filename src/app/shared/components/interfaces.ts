@@ -38,10 +38,16 @@ export interface Post {
     body: string,
     image: string,
     createdAt: string,
-    status: string
+    status: string,
+    section: string
 }
 
 export interface PostStatus {
+    id: number,
+    name: string
+}
+
+export interface Section {
     id: number,
     name: string
 }

@@ -5,7 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import moment from 'moment';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { Subscription, switchMap } from 'rxjs';
-import { Post, PostStatus } from 'src/app/shared/components/interfaces';
+import { Post, PostStatus, Section } from 'src/app/shared/components/interfaces';
 import { DataService } from 'src/app/shared/data.service';
 import { PostsService } from 'src/app/shared/post.service';
 
@@ -20,15 +20,17 @@ import { PostsService } from 'src/app/shared/post.service';
 export class EditPageComponent implements OnInit, OnDestroy {
 
   @Input() editable: boolean = true;
-  form: FormGroup
+  public form: FormGroup;
   title: FormControl;
   body: FormControl;
   status: FormControl;
   date: FormControl;
   time: FormControl;
   image: FormControl;
+  section: FormControl;
 
   statuses: PostStatus[] = this.dataService.SHARED_STATUSES;
+  sections: Section[] = this.dataService.SHARED_SECTIONS;
 
   imageBase: any;
   imageExists: boolean = true;
@@ -40,6 +42,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
   submitted: boolean = false
 
   selectedStatusId: number;
+  selectedSectionId: number;
 
   uSub: Subscription;
 
@@ -57,14 +60,15 @@ export class EditPageComponent implements OnInit, OnDestroy {
     this.initQuillModules()
     
     let id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
 
     this.postService.getById(new Number(id))
       .subscribe((post: Post) => {
         this.post = post;
+        this.imageBase = post.image;
 
         this.selectedStatusId = this.dataService.getPostStatusId(post.status);
-        
+        this.selectedSectionId = this.dataService.getPostSectionId(post.section);
+
         this.createFormControls(post);
         this.createForm();
 
@@ -81,6 +85,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
     this.status = new FormControl(this.selectedStatusId, Validators.required);
     this.date = new FormControl(post.createdAt, Validators.required);
     this.image = new FormControl(post.image, Validators.required);
+    this.section = new FormControl(this.selectedSectionId, Validators.required);
   }
 
   createForm() {
@@ -89,7 +94,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
       body: this.body,
       status: this.status,
       date: this.date,
-      image: this.image
+      image: this.image,
+      section: this.section
     });
   }
 
@@ -124,13 +130,13 @@ export class EditPageComponent implements OnInit, OnDestroy {
     this.post.image = null;
 
     this.postService.update(this.post).subscribe();
+    this.imageExists = false;
   }
 
   submit() {
     if (this.form.invalid) {
       return
     }
-
 
     this.uSub = this.postService.update(
       {
@@ -139,7 +145,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
         body: this.form.value.body,
         image: this.imageBase,
         createdAt: this.datepipe.transform(this.form.value.date, 'yyyy-MM-dd'),
-        status: this.form.value.status
+        status: this.form.value.status,
+        section: this.form.value.section
       }).subscribe(() => {
         this.submitted = true;
         this.router.navigate(['/admin', 'dashboard'])
